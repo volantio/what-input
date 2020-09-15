@@ -89,7 +89,7 @@ module.exports = (() => {
    */
 
   const setUp = (options = {}) => {
-    attributePrefix = options.attributePrefix ?? 'data-'
+    attributePrefix = options.attributePrefix || 'data-'
 
     // add correct mouse wheel event mapping to `inputMap`
     inputMap[detectWheel()] = 'mouse'
