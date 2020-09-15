@@ -18,9 +18,6 @@ module.exports = (() => {
   // UNIX timestamp of current event
   let currentTimestamp = Date.now()
 
-  // check for a `data-whatpersist` attribute on either the `html` or `body` elements, defaults to `true`
-  let shouldPersist = 'false'
-
   // form input types
   const formInputs = ['button', 'input', 'select', 'textarea']
 
@@ -105,8 +102,6 @@ module.exports = (() => {
     // and are treated separately
     const options = supportsPassive ? { passive: true } : false
 
-    document.addEventListener('DOMContentLoaded', setPersist)
-
     // pointer events (mouse, pen, touch)
     if (window.PointerEvent) {
       window.addEventListener('pointerdown', setInput)
@@ -138,34 +133,6 @@ module.exports = (() => {
     window.addEventListener('focusout', clearElement)
   }
 
-  // checks if input persistence should happen and
-  // get saved state from session storage if true (defaults to `false`)
-  const setPersist = () => {
-    shouldPersist = !(
-      docElem.getAttribute('data-whatpersist') ||
-      document.body.getAttribute('data-whatpersist') === 'false'
-    )
-
-    if (shouldPersist) {
-      // check for session variables and use if available
-      try {
-        if (window.sessionStorage.getItem('what-input')) {
-          currentInput = window.sessionStorage.getItem('what-input')
-        }
-
-        if (window.sessionStorage.getItem('what-intent')) {
-          currentIntent = window.sessionStorage.getItem('what-intent')
-        }
-      } catch (e) {
-        // fail silently
-      }
-    }
-
-    // always run these so at least `initial` state is set
-    doUpdate('input')
-    doUpdate('intent')
-  }
-
   // checks conditions before updating new input
   const setInput = event => {
     const eventKey = event.which
@@ -194,7 +161,6 @@ module.exports = (() => {
     if (shouldUpdate && currentInput !== value) {
       currentInput = value
 
-      persistInput('input', currentInput)
       doUpdate('input')
     }
 
@@ -211,7 +177,6 @@ module.exports = (() => {
       if (notFormInput) {
         currentIntent = value
 
-        persistInput('intent', currentIntent)
         doUpdate('intent')
       }
     }
@@ -248,7 +213,6 @@ module.exports = (() => {
     ) {
       currentIntent = value
 
-      persistInput('intent', currentIntent)
       doUpdate('intent')
     }
   }
@@ -277,16 +241,6 @@ module.exports = (() => {
 
     docElem.removeAttribute('data-whatelement')
     docElem.removeAttribute('data-whatclasses')
-  }
-
-  const persistInput = (which, value) => {
-    if (shouldPersist) {
-      try {
-        window.sessionStorage.setItem('what-' + which, value)
-      } catch (e) {
-        // fail silently
-      }
-    }
   }
 
   /*
@@ -445,10 +399,6 @@ module.exports = (() => {
       if (position || position === 0) {
         functionList.splice(position, 1)
       }
-    },
-
-    clearStorage: () => {
-      window.sessionStorage.clear()
     }
   }
 })()
