@@ -4,6 +4,7 @@ declare const whatInput: {
   ignoreKeys: (keyCodes: number[]) => void;
   setUp: () => void;
   specificKeys: (keyCodes: number[]) => void;
+  tearDown: () => void;
   registerOnChange: (callback: (type: InputMethod) => void, strategy?: Strategy) => void;
   unRegisterOnChange: (callback: (type: InputMethod) => void) => void;
   clearStorage: () => void;

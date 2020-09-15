@@ -92,6 +92,10 @@ module.exports = (() => {
     addListeners()
   }
 
+  const tearDown = () => {
+    removeListeners()
+  }
+
   /*
    * events
    */
@@ -131,6 +135,38 @@ module.exports = (() => {
     // focus events
     window.addEventListener('focusin', setElement)
     window.addEventListener('focusout', clearElement)
+  }
+
+  const removeListeners = () => {
+    // pointer events (mouse, pen, touch)
+    if (window.PointerEvent) {
+      window.removeEventListener('pointerdown', setInput)
+      window.removeEventListener('pointermove', setIntent)
+    } else if (window.MSPointerEvent) {
+      window.removeEventListener('MSPointerDown', setInput)
+      window.removeEventListener('MSPointerMove', setIntent)
+    } else {
+      // mouse events
+      window.removeEventListener('mousedown', setInput)
+      window.removeEventListener('mousemove', setIntent)
+
+      // touch events
+      if ('ontouchstart' in window) {
+        window.removeEventListener('touchstart', setInput)
+        window.removeEventListener('touchend', setInput)
+      }
+    }
+
+    // mouse wheel
+    window.removeEventListener(detectWheel(), setIntent)
+
+    // keyboard events
+    window.removeEventListener('keydown', setInput)
+    window.removeEventListener('keyup', setInput)
+
+    // focus events
+    window.removeEventListener('focusin', setElement)
+    window.removeEventListener('focusout', clearElement)
   }
 
   // checks conditions before updating new input
@@ -349,6 +385,8 @@ module.exports = (() => {
     specificKeys: arr => {
       specificMap = arr
     },
+
+    tearDown,
 
     // attach functions to input and intent "events"
     // funct: function to fire on change
