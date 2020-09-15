@@ -2,6 +2,7 @@ declare const whatInput: {
   ask: (strategy?: Strategy) => InputMethod;
   element: () => string | null;
   ignoreKeys: (keyCodes: number[]) => void;
+  setUp: () => void;
   specificKeys: (keyCodes: number[]) => void;
   registerOnChange: (callback: (type: InputMethod) => void, strategy?: Strategy) => void;
   unRegisterOnChange: (callback: (type: InputMethod) => void) => void;

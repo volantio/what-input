@@ -346,16 +346,6 @@ module.exports = (() => {
   }
 
   /*
-   * init
-   */
-
-  // don't start script unless browser cuts the mustard
-  // (also passes if polyfills are used)
-  if ('addEventListener' in window && Array.prototype.indexOf) {
-    setUp()
-  }
-
-  /*
    * api
    */
 
@@ -377,6 +367,8 @@ module.exports = (() => {
     ignoreKeys: arr => {
       ignoreMap = arr
     },
+
+    setUp,
 
     // overwrites specific char keys to update on
     specificKeys: arr => {
