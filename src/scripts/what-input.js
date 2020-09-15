@@ -6,6 +6,9 @@ module.exports = (() => {
   // cache document.documentElement
   const docElem = document.documentElement
 
+  // Prefix for all attributes added to `docElem`
+  let attributePrefix
+
   // currently focused dom element
   let currentElement = null
 
@@ -85,7 +88,9 @@ module.exports = (() => {
    * set up
    */
 
-  const setUp = () => {
+  const setUp = (options = {}) => {
+    attributePrefix = options.attributePrefix ?? 'data-'
+
     // add correct mouse wheel event mapping to `inputMap`
     inputMap[detectWheel()] = 'mouse'
 
@@ -221,7 +226,7 @@ module.exports = (() => {
   // updates the doc and `inputTypes` array with new input
   const doUpdate = which => {
     docElem.setAttribute(
-      'data-what' + which,
+      attributePrefix + 'what' + which,
       which === 'input' ? currentInput : currentIntent
     )
 
@@ -262,11 +267,11 @@ module.exports = (() => {
     }
 
     currentElement = event.target.nodeName.toLowerCase()
-    docElem.setAttribute('data-whatelement', currentElement)
+    docElem.setAttribute(attributePrefix + 'whatelement', currentElement)
 
     if (event.target.classList && event.target.classList.length) {
       docElem.setAttribute(
-        'data-whatclasses',
+        attributePrefix + 'whatclasses',
         event.target.classList.toString().replace(' ', ',')
       )
     }
@@ -275,8 +280,8 @@ module.exports = (() => {
   const clearElement = () => {
     currentElement = null
 
-    docElem.removeAttribute('data-whatelement')
-    docElem.removeAttribute('data-whatclasses')
+    docElem.removeAttribute(attributePrefix + 'whatelement')
+    docElem.removeAttribute(attributePrefix + 'whatclasses')
   }
 
   /*
