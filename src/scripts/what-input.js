@@ -205,7 +205,7 @@ module.exports = (() => {
           (activeElem.nodeName.toLowerCase() === 'button' &&
             !activeElem.closest('form')))
 
-      if (notFormInput) {
+      if (notFormInput || value !== 'keyboard') {
         currentIntent = value
 
         doUpdate('intent')
