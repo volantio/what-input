@@ -44,11 +44,8 @@ module.exports = (() => {
     keydown: 'keyboard',
     keyup: 'keyboard',
     mousedown: 'mouse',
-    mousemove: 'mouse',
     MSPointerDown: 'pointer',
-    MSPointerMove: 'pointer',
     pointerdown: 'pointer',
-    pointermove: 'pointer',
     touchstart: 'touch',
     touchend: 'touch'
   }
@@ -119,14 +116,11 @@ module.exports = (() => {
     // pointer events (mouse, pen, touch)
     if (window.PointerEvent) {
       window.addEventListener('pointerdown', setInput)
-      window.addEventListener('pointermove', setIntent)
     } else if (window.MSPointerEvent) {
       window.addEventListener('MSPointerDown', setInput)
-      window.addEventListener('MSPointerMove', setIntent)
     } else {
       // mouse events
       window.addEventListener('mousedown', setInput)
-      window.addEventListener('mousemove', setIntent)
 
       // touch events
       if ('ontouchstart' in window) {
@@ -134,9 +128,6 @@ module.exports = (() => {
         window.addEventListener('touchend', setInput)
       }
     }
-
-    // mouse wheel
-    window.addEventListener(detectWheel(), setIntent, options)
 
     // keyboard events
     window.addEventListener('keydown', setInput)
@@ -151,14 +142,11 @@ module.exports = (() => {
     // pointer events (mouse, pen, touch)
     if (window.PointerEvent) {
       window.removeEventListener('pointerdown', setInput)
-      window.removeEventListener('pointermove', setIntent)
     } else if (window.MSPointerEvent) {
       window.removeEventListener('MSPointerDown', setInput)
-      window.removeEventListener('MSPointerMove', setIntent)
     } else {
       // mouse events
       window.removeEventListener('mousedown', setInput)
-      window.removeEventListener('mousemove', setIntent)
 
       // touch events
       if ('ontouchstart' in window) {
@@ -166,9 +154,6 @@ module.exports = (() => {
         window.removeEventListener('touchend', setInput)
       }
     }
-
-    // mouse wheel
-    window.removeEventListener(detectWheel(), setIntent)
 
     // keyboard events
     window.removeEventListener('keydown', setInput)
@@ -236,31 +221,6 @@ module.exports = (() => {
     )
 
     fireFunctions(which)
-  }
-
-  // updates input intent for `mousemove` and `pointermove`
-  const setIntent = event => {
-    let value = inputMap[event.type]
-
-    if (value === 'pointer') {
-      value = pointerType(event)
-    }
-
-    // test to see if `mousemove` happened relative to the screen to detect scrolling versus mousemove
-    detectScrolling(event)
-
-    // only execute if scrolling isn't happening
-    if (
-      ((!isScrolling && !validateTouch(value)) ||
-        ((isScrolling && event.type === 'wheel') ||
-          event.type === 'mousewheel' ||
-          event.type === 'DOMMouseScroll')) &&
-      currentIntent !== value
-    ) {
-      currentIntent = value
-
-      doUpdate('intent')
-    }
   }
 
   const setElement = event => {
