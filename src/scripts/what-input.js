@@ -99,6 +99,11 @@ module.exports = (() => {
 
   const tearDown = () => {
     removeListeners()
+
+    docElem.removeAttribute(attributePrefix + 'whatinput')
+    docElem.removeAttribute(attributePrefix + 'whatintent')
+    docElem.removeAttribute(attributePrefix + 'whatelement')
+    docElem.removeAttribute(attributePrefix + 'whatclasses')
   }
 
   /*
