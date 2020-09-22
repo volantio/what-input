@@ -4,7 +4,7 @@ module.exports = (() => {
    */
 
   // cache document.documentElement
-  const docElem = document.documentElement
+  let docElem
 
   // Prefix for all attributes added to `docElem`
   let attributePrefix
@@ -86,6 +86,7 @@ module.exports = (() => {
    */
 
   const setUp = (options = {}) => {
+    docElem = options.documentElement || document.documentElement
     attributePrefix = options.attributePrefix || 'data-'
 
     // add correct mouse wheel event mapping to `inputMap`
